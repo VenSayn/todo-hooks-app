@@ -1,25 +1,48 @@
-import logo from './logo.svg';
+import React, { useState, useCallback } from 'react';
+
+import TodoList from './components/TodoList';
+
+import AddTodoModal from './components/AddTodoModal';
+
 import './App.css';
 
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+const [todos, setTodos] = useState([]);
+const [isModalOpen, setIsModalOpen] = useState(false);
+
+// Оптимизация функции добавления задачи
+const handleAddTodo = useCallback(
+(newTodo) => {
+setTodos((prevTodos) => [...prevTodos, newTodo]);
+},
+[setTodos]
+
+);
+
+// Оптимизация функции открытия/закрытия модального окна
+const openModal = useCallback(() => setIsModalOpen(true), []);
+const closeModal = useCallback(() => setIsModalOpen(false), []);
+
+return (
+
+<div className="app">
+
+<h1>Список задач</h1>
+
+<button className="add-todo-button" onClick={openModal}>
+
+Добавить задачу
+
+</button>
+<TodoList todos={todos} />
+{isModalOpen && <AddTodoModal onAdd={handleAddTodo} 
+onClose={closeModal} />}
+</div>
+);
+
 }
+
 
 export default App;
